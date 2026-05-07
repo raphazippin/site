@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raphael Zippin — Especialista Linux & DevOps</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e14;
+    --bg2: #0f1520;
+    --bg3: #141c2e;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #39ff14;
+    --text: #e8edf5;
+    --muted: #6b7a94;
+    --border: rgba(0,212,255,0.15);
+    --card: rgba(15,21,32,0.9);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* GRID NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* SCAN LINE */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent);
+    animation: scan 8s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @keyframes scan {
+    0% { top: -2px; }
+    100% { top: 100vh; }
+  }
+
+  /* GLOW ORBS */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb-1 {
+    width: 600px; height: 600px;
+    background: rgba(0,212,255,0.06);
+    top: -200px; right: -200px;
+  }
+  .orb-2 {
+    width: 500px; height: 500px;
+    background: rgba(255,107,53,0.05);
+    bottom: 10%; left: -150px;
+  }
+
+  /* LAYOUT */
+  .container {
+    position: relative;
+    z-index: 2;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 0;
+    background: rgba(10,14,20,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  nav .inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  .nav-logo span { color: var(--text); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 8px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+
+  .nav-cta:hover {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 80px;
+  }
+
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--accent3);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent3);
+  }
+
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(48px, 6vw, 80px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -3px;
+    margin-bottom: 8px;
+  }
+
+  .hero-name .accent { color: var(--accent); }
+
+  .hero-role {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(18px, 2vw, 24px);
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 32px;
+    letter-spacing: -0.5px;
+  }
+
+  .hero-desc {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.9;
+    margin-bottom: 40px;
+    max-width: 440px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    padding: 14px 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+    border: none;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: #00b8e0;
+    transform: translateY(-2px);
+  }
+
+  .btn-ghost {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+  }
+
+  .btn-ghost:hover { color: var(--text); }
+
+  /* STATS BOX */
+  .hero-stats {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeInRight 0.8s ease 0.3s both;
+  }
+
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .hero-stats::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+  }
+
+  .stats-header {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .stats-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .stat-item:last-child { border-bottom: none; }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    min-width: 80px;
+  }
+
+  .stat-label {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .stat-label strong {
+    display: block;
+    color: var(--text);
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  /* SECTION */
+  section {
+    padding: 100px 0;
+  }
+
+  .section-header {
+    margin-bottom: 64px;
+  }
+
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-tag::before {
+    content: '//';
+    opacity: 0.5;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+  }
+
+  .skill-card {
+    background: var(--bg2);
+    padding: 32px 28px;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-card:hover { background: var(--bg3); }
+
+  .skill-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+
+  .skill-card:hover::after { width: 100%; }
+
+  .skill-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .skill-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .skill-desc {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 16px;
+  }
+
+  .tag {
+    font-size: 10px;
+    padding: 3px 10px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* EXPERIENCE */
+  .exp-list {
+    position: relative;
+  }
+
+  .exp-line {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--accent), transparent);
+    margin-left: 0;
+  }
+
+  .exp-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 40px;
+    padding: 40px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .exp-item:last-child { border-bottom: none; }
+
+  .exp-meta { text-align: right; padding-top: 4px; }
+
+  .exp-company {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .exp-period {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .exp-location {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    opacity: 0.7;
+  }
+
+  .exp-role {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+
+  .exp-desc {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .exp-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 16px;
+  }
+
+  .chip {
+    font-size: 10px;
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text);
+    letter-spacing: 0.5px;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .service-card {
+    border: 1px solid var(--border);
+    padding: 36px;
+    position: relative;
+    background: var(--bg2);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .service-card:hover {
+    border-color: rgba(0,212,255,0.4);
+    transform: translateY(-4px);
+  }
+
+  .service-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 64px;
+    font-weight: 800;
+    color: rgba(0,212,255,0.07);
+    position: absolute;
+    top: 16px; right: 24px;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .service-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .service-desc {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .service-price {
+    margin-top: 20px;
+    font-size: 11px;
+    color: var(--accent3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* CONTACT */
+  .contact-section {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .contact-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 0.95;
+  }
+
+  .contact-title .accent { color: var(--accent); }
+
+  .contact-subtitle {
+    color: var(--muted);
+    margin-top: 20px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s;
+    background: var(--bg3);
+  }
+
+  .contact-link:hover {
+    border-color: var(--accent);
+    background: rgba(0,212,255,0.05);
+  }
+
+  .contact-link-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(0,212,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .contact-link-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .contact-link-value {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 32px 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up {
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .fade-up-1 { animation-delay: 0.1s; }
+  .fade-up-2 { animation-delay: 0.2s; }
+  .fade-up-3 { animation-delay: 0.3s; }
+  .fade-up-4 { animation-delay: 0.4s; }
+  .fade-up-5 { animation-delay: 0.5s; }
+
+  /* BADGE */
+  .avail-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border: 1px solid rgba(57,255,20,0.3);
+    background: rgba(57,255,20,0.06);
+    font-size: 11px;
+    color: var(--accent3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .avail-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent3);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* CERT PILLS */
+  .cert-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .cert-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text);
+  }
+
+  .cert-pill-icon {
+    color: var(--accent2);
+    font-size: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .hero-content, .contact-inner { grid-template-columns: 1fr; gap: 40px; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .exp-item { grid-template-columns: 1fr; gap: 8px; }
+    .exp-meta { text-align: left; }
+    .nav-links { display: none; }
+    .hero-stats { order: -1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="inner">
+    <div class="nav-logo">RAPHAEL<span>.ZIPPIN</span></div>
+    <ul class="nav-links">
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experiência</a></li>
+      <li><a href="#services">Serviços</a></li>
+      <li><a href="#contact">Contato</a></li>
+    </ul>
+    <a href="mailto:raphazippin@gmail.com" class="nav-cta">Contratar</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div>
+        <div class="avail-badge fade-up fade-up-1">
+          <span class="avail-dot"></span>
+          Disponível para projetos PJ
+        </div>
+        <div class="hero-tag fade-up fade-up-2">Especialista Linux & DevOps</div>
+        <h1 class="hero-name fade-up fade-up-3">
+          RAPHAEL<br><span class="accent">ZIPPIN</span>
+        </h1>
+        <p class="hero-role fade-up fade-up-4">Linux · VMware · Docker · AWS · Zabbix</p>
+        <p class="hero-desc fade-up fade-up-5">
+          Mais de 15 anos de experiência em infraestrutura de TI e DevOps.
+          Especialista em automação, monitoramento de alta disponibilidade,
+          containerização e ambientes críticos de produção.
+        </p>
+        <div class="hero-actions fade-up fade-up-5">
+          <a href="mailto:raphazippin@gmail.com" class="btn-primary">→ Fale Comigo</a>
+          <a href="https://www.linkedin.com/in/raphazippin" target="_blank" class="btn-ghost">
+            Ver LinkedIn ↗
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stats-header">Números</div>
+        <div class="stat-item">
+          <div class="stat-num">15+</div>
+          <div class="stat-label">
+            <strong>Anos de Experiência</strong>
+            em TI, Infra e DevOps
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">8+</div>
+          <div class="stat-label">
+            <strong>Empresas Atendidas</strong>
+            ISPs, indústria, telecom e tech
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">
+            <strong>Servidores Linux</strong>
+            físicos, virtuais e containers
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">5+</div>
+          <div class="stat-label">
+            <strong>Certificações</strong>
+            Docker, AWS, Ansible, Terraform
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Stack técnico</div>
+      <h2 class="section-title">Competências</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <span class="skill-icon">🐧</span>
+        <div class="skill-name">Linux & SysAdmin</div>
+        <div class="skill-desc">Administração avançada de servidores Linux físicos e virtuais. Scripts shell, cron, gestão de serviços e troubleshooting de produção.</div>
+        <div class="skill-tags">
+          <span class="tag">Bash</span>
+          <span class="tag">SFTP/FTP</span>
+          <span class="tag">SNMP</span>
+          <span class="tag">SQL</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-icon">🐳</span>
+        <div class="skill-name">Docker & Containers</div>
+        <div class="skill-desc">Criação e gestão de ambientes containerizados com Docker, Docker Swarm e LXC. Deploy de stacks em produção com alta disponibilidade.</div>
+        <div class="skill-tags">
+          <span class="tag">Docker</span>
+          <span class="tag">Swarm</span>
+          <span class="tag">LXC</span>
+          <span class="tag">Portainer</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-icon">⚙️</span>
+        <div class="skill-name">Automação & IaC</div>
+        <div class="skill-desc">Infraestrutura como código com Ansible e Terraform. Provisionamento automatizado em VMware, Proxmox e AWS.</div>
+        <div class="skill-tags">
+          <span class="tag">Ansible</span>
+          <span class="tag">Terraform</span>
+          <span class="tag">Git</span>
+          <span class="tag">CI/CD</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-icon">📊</span>
+        <div class="skill-name">Monitoramento</div>
+        <div class="skill-desc">Implantação de stacks de monitoramento em HA com Zabbix, Grafana, Prometheus. Criação de dashboards, templates e alertas customizados.</div>
+        <div class="skill-tags">
+          <span class="tag">Zabbix</span>
+          <span class="tag">Grafana</span>
+          <span class="tag">Prometheus</span>
+          <span class="tag">Loki</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-icon">☁️</span>
+        <div class="skill-name">Virtualização & Cloud</div>
+        <div class="skill-desc">Gestão de clusters VMware vSphere, Proxmox, oVirt e OpenStack. Deployments na AWS com EC2, alta disponibilidade e escalabilidade.</div>
+        <div class="skill-tags">
+          <span class="tag">VMware</span>
+          <span class="tag">Proxmox</span>
+          <span class="tag">AWS EC2</span>
+          <span class="tag">oVirt</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-icon">🌐</span>
+        <div class="skill-name">Redes & Telecom</div>
+        <div class="skill-desc">Configuração de roteadores Huawei, Juniper, Mikrotik. OLTs, backbone ISP, VPN, Asterisk (VoIP) e gerenciamento de endereçamento IP.</div>
+        <div class="skill-tags">
+          <span class="tag">Mikrotik</span>
+          <span class="tag">BGP</span>
+          <span class="tag">OpenVPN</span>
+          <span class="tag">Asterisk</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Trajetória</div>
+      <h2 class="section-title">Experiência</h2>
+    </div>
+    <div class="exp-list">
+
+      <div class="exp-item">
+        <div class="exp-meta">
+          <div class="exp-company">Arqia</div>
+          <div class="exp-period">Nov 2024 – Mar 2026</div>
+          <div class="exp-location">São Paulo, SP</div>
+        </div>
+        <div>
+          <div class="exp-role">Especialista Linux</div>
+          <div class="exp-desc">Garantia da geração, conversão, manipulação e transporte de CDRs em servidores Linux físicos e virtuais. Suporte ao monitoramento de ativos com Zabbix e SolarWinds. Automação de infraestrutura com Ansible e Terraform.</div>
+          <div class="exp-chips">
+            <span class="chip">Linux</span><span class="chip">CDR</span><span class="chip">Zabbix</span><span class="chip">SolarWinds</span><span class="chip">Ansible</span><span class="chip">Terraform</span><span class="chip">Shell Script</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-meta">
+          <div class="exp-company">DirectWeb</div>
+          <div class="exp-period">Mar 2023 – Nov 2024</div>
+          <div class="exp-location">São Paulo, SP</div>
+        </div>
+        <div>
+          <div class="exp-role">Analista Linux Sênior</div>
+          <div class="exp-desc">Suporte Sênior e projetos DevOps em plataformas VMware, oVirt, OpenStack e Proxmox. Implantação de Zabbix em HA com MariaDB/Galera Cluster e Grafana. Automação com Terraform, Ansible, Docker e Git.</div>
+          <div class="exp-chips">
+            <span class="chip">VMware</span><span class="chip">Proxmox</span><span class="chip">Docker</span><span class="chip">Zabbix HA</span><span class="chip">MariaDB/Galera</span><span class="chip">Grafana</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-meta">
+          <div class="exp-company">NR Conexões</div>
+          <div class="exp-period">Abr 2021 – Dez 2022</div>
+          <div class="exp-location">Rio Claro, SP</div>
+        </div>
+        <div>
+          <div class="exp-role">Analista de Redes Master</div>
+          <div class="exp-desc">Gestão de backbone ISP e equipamentos Huawei, Juniper, Mikrotik, Ubiquiti e OLTs. Gerenciamento de equipe de analistas. Automação com Terraform, Ansible e LXC containers.</div>
+          <div class="exp-chips">
+            <span class="chip">Mikrotik</span><span class="chip">Huawei</span><span class="chip">Juniper</span><span class="chip">OLT</span><span class="chip">Gestão de Equipe</span><span class="chip">ISP</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-meta">
+          <div class="exp-company">West Internet</div>
+          <div class="exp-period">Fev 2018 – Mar 2021</div>
+          <div class="exp-location">Búzios & Cabo Frio, RJ</div>
+        </div>
+        <div>
+          <div class="exp-role">Gerente de TI / Coord. NOC</div>
+          <div class="exp-desc">SysAdmin/DevOps responsável por toda a infraestrutura. Cluster VMware, NOC com Zabbix e Grafana. Gestão dos setores de Applications, IT, CCO e NOC.</div>
+          <div class="exp-chips">
+            <span class="chip">VMware Cluster</span><span class="chip">NOC</span><span class="chip">Gestão</span><span class="chip">Zabbix</span><span class="chip">Grafana</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-meta">
+          <div class="exp-company">Livre It</div>
+          <div class="exp-period">Mar 2015 – Fev 2017</div>
+          <div class="exp-location">Campinas, SP</div>
+        </div>
+        <div>
+          <div class="exp-role">Consultor de TI</div>
+          <div class="exp-desc">Consultoria em TI, Telecom e IoT na região de Campinas. Suporte simultâneo a mais de 20 clientes. Linux, Active Directory, Xen, Asterisk, Zabbix, Mikrotik, Raspberry Pi.</div>
+          <div class="exp-chips">
+            <span class="chip">Consultoria</span><span class="chip">Telecom</span><span class="chip">IoT</span><span class="chip">Asterisk</span><span class="chip">Mikrotik</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-meta">
+          <div class="exp-company">Senac SP</div>
+          <div class="exp-period">Abr 2009 – Jun 2010</div>
+          <div class="exp-location">Campinas, SP</div>
+        </div>
+        <div>
+          <div class="exp-role">Docente</div>
+          <div class="exp-desc">Ministrou aulas para curso técnico em Informática e Redes. Windows Server, Linux, Redes WAN/Wireless e Virtualização. Palestras e cursos livres.</div>
+          <div class="exp-chips">
+            <span class="chip">Docência</span><span class="chip">Linux</span><span class="chip">Redes</span><span class="chip">Virtualização</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Pessoa Jurídica</div>
+      <h2 class="section-title">Serviços PJ</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <div class="service-title">Infraestrutura & SysAdmin Linux</div>
+        <div class="service-desc">Administração, hardening e otimização de servidores Linux. Gestão de serviços críticos (DNS, FTP/SFTP, SQL, Asterisk), scripts de automação e suporte a ambientes de produção.</div>
+        <div class="service-price">★ Contrato mensal ou por projeto</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <div class="service-title">Docker & Orquestração</div>
+        <div class="service-desc">Containerização de aplicações, criação de stacks Docker Swarm, pipelines de deploy e gestão de ambientes de desenvolvimento, homologação e produção.</div>
+        <div class="service-price">★ Contrato mensal ou por projeto</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">03</div>
+        <div class="service-title">Monitoramento & Observabilidade</div>
+        <div class="service-desc">Implantação de stacks Zabbix + Grafana em alta disponibilidade, Prometheus, Loki. Dashboards customizados, alertas inteligentes e gestão de logs centralizados.</div>
+        <div class="service-price">★ Contrato mensal ou por projeto</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">04</div>
+        <div class="service-title">Automação & IaC</div>
+        <div class="service-desc">Provisionamento automatizado com Ansible e Terraform em VMware, Proxmox e AWS. Redução de trabalho manual, padronização e rastreabilidade de toda a infraestrutura.</div>
+        <div class="service-price">★ Contrato mensal ou por projeto</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTS -->
+<section>
+  <div class="container">
+    <div class="divider">Certificações</div>
+    <div class="cert-grid">
+      <div class="cert-pill"><span class="cert-pill-icon">🏅</span> Docker: Criando containers sem dor de cabeça</div>
+      <div class="cert-pill"><span class="cert-pill-icon">🏅</span> Docker: Criando e gerenciando containers</div>
+      <div class="cert-pill"><span class="cert-pill-icon">🏅</span> Ansible: Infraestrutura como código</div>
+      <div class="cert-pill"><span class="cert-pill-icon">🏅</span> IaC: AWS com Ansible e Terraform</div>
+      <div class="cert-pill"><span class="cert-pill-icon">🏅</span> Deploy EC2: HA e Escalabilidade na AWS</div>
+    </div>
+    <div style="margin-top:32px; color: var(--muted); font-size: 12px;">
+      🎓 Graduação em Gestão de TIC — Universidade Estácio de Sá (2019–2021) &nbsp;|&nbsp;
+      Técnico em Informática — Senac (2005–2007)
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="container">
+    <div class="contact-inner">
+      <div>
+        <div class="section-tag">Vamos trabalhar juntos</div>
+        <h2 class="contact-title">Pronto para<br>seu próximo<br><span class="accent">projeto?</span></h2>
+        <p class="contact-subtitle">
+          Disponível para contratos PJ de curto, médio ou longo prazo.
+          Atendimento remoto em todo o Brasil.
+        </p>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:raphazippin@gmail.com" class="contact-link">
+          <div class="contact-link-icon">✉</div>
+          <div>
+            <div class="contact-link-label">Email</div>
+            <div class="contact-link-value">raphazippin@gmail.com</div>
+          </div>
+        </a>
+        <a href="https://wa.me/5511978063303" target="_blank" class="contact-link">
+          <div class="contact-link-icon">📱</div>
+          <div>
+            <div class="contact-link-label">WhatsApp / Celular</div>
+            <div class="contact-link-value">+55 (11) 97806-3303</div>
+          </div>
+        </a>
+        <a href="https://www.linkedin.com/in/raphazippin" target="_blank" class="contact-link">
+          <div class="contact-link-icon">in</div>
+          <div>
+            <div class="contact-link-label">LinkedIn</div>
+            <div class="contact-link-value">linkedin.com/in/raphazippin</div>
+          </div>
+        </a>
+        <div class="contact-link" style="cursor:default;">
+          <div class="contact-link-icon">📍</div>
+          <div>
+            <div class="contact-link-label">Localização</div>
+            <div class="contact-link-value">São Paulo, SP — Brasil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 Raphael Zippin. Todos os direitos reservados.</div>
+    <div style="color: var(--accent); font-size: 10px; letter-spacing: 2px;">ESPECIALISTA LINUX & DEVOPS</div>
+  </div>
+</footer>
+
+</body>
+</html>
